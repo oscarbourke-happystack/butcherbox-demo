@@ -768,6 +768,125 @@ const Step5 = ({ onNext, voice, addr, setAddr, ctaColor }) => (
       <span>Ships frozen</span>
     </div>
 
+    <div style={{
+      marginTop: 12,
+      background: PB.cream,
+      border: `2px solid ${PB.ink}`,
+      borderRadius: 12,
+      padding: 12,
+      boxShadow: `2px 2px 0 ${PB.ink}`,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 10,
+    }}>
+      <div style={{
+        fontFamily: 'Inter, sans-serif',
+        fontWeight: 800,
+        fontSize: 11,
+        letterSpacing: '0.12em',
+        textTransform: 'uppercase',
+        color: PB.ink,
+        opacity: 0.85,
+      }}>Marketing updates</div>
+
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+        <input
+          id="mc-marketing-optin"
+          type="checkbox"
+          checked={!!addr.marketingOptIn}
+          onChange={(e) => setAddr({ ...addr, marketingOptIn: e.target.checked })}
+          aria-describedby="mc-marketing-optin-help"
+          style={{
+            width: 18,
+            height: 18,
+            marginTop: 2,
+            accentColor: PB.accent,
+            cursor: 'pointer',
+          }}
+        />
+        <div style={{ flex: 1 }}>
+          <label
+            htmlFor="mc-marketing-optin"
+            style={{
+              display: 'block',
+              fontFamily: 'Inter, sans-serif',
+              fontSize: 13,
+              fontWeight: 700,
+              color: PB.ink,
+              cursor: 'pointer',
+              lineHeight: 1.25,
+            }}
+          >
+            Sign me up for marketing information & offers.
+          </label>
+          <div
+            id="mc-marketing-optin-help"
+            style={{
+              marginTop: 4,
+              fontFamily: 'Inter, sans-serif',
+              fontSize: 11,
+              color: PB.ink,
+              opacity: 0.65,
+              lineHeight: 1.35,
+            }}
+          >
+            Occasional emails about new cuts, deals, and updates. Unsubscribe anytime.
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: 8 }}>
+        <button
+          type="button"
+          className="mc-btn-press"
+          onClick={() => setAddr({ ...addr, marketingOptIn: true })}
+          aria-label="Check the marketing sign-up box"
+          style={{
+            flex: 1,
+            background: addr.marketingOptIn ? PB.ink : PB.cream,
+            color: addr.marketingOptIn ? PB.cream : PB.ink,
+            border: `2px solid ${PB.ink}`,
+            borderRadius: 999,
+            padding: '12px 14px',
+            fontFamily: 'Inter, sans-serif',
+            fontSize: 12,
+            fontWeight: 800,
+            letterSpacing: '0.06em',
+            textTransform: 'uppercase',
+            cursor: 'pointer',
+            boxShadow: `0 3px 0 ${PB.ink}`,
+          }}
+        >
+          {addr.marketingOptIn ? 'Signed up' : 'Sign me up'}
+        </button>
+        {addr.marketingOptIn && (
+          <button
+            type="button"
+            className="mc-btn-press"
+            onClick={() => setAddr({ ...addr, marketingOptIn: false })}
+            aria-label="Uncheck the marketing sign-up box"
+            style={{
+              background: PB.cream,
+              color: PB.ink,
+              border: `2px solid ${PB.ink}`,
+              borderRadius: 999,
+              padding: '12px 14px',
+              fontFamily: 'Inter, sans-serif',
+              fontSize: 12,
+              fontWeight: 800,
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+              cursor: 'pointer',
+              boxShadow: `0 3px 0 ${PB.ink}`,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            No thanks
+          </button>
+        )}
+      </div>
+    </div>
+
     <div style={{ marginTop: 16 }}>
       <PrimaryButton onClick={onNext} color={ctaColor}>Claim my box →</PrimaryButton>
     </div>
