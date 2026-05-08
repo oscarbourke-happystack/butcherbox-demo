@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>ButcherBox — gift unboxing demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; }
+    body {
+      background: #0d2727;
+      font-family: 'Inter', system-ui, sans-serif;
+      color: #14110E;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    .mc-page {
+      width: 100vw; height: 100vh; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      background:
+        radial-gradient(circle at 20% 20%, #1F5C5C44 0, transparent 50%),
+        radial-gradient(circle at 80% 80%, #D9442C22 0, transparent 50%),
+        #0d2727;
+      overflow: hidden;
+    }
+    .mc-phone {
+      width: 390px; height: 844px;
+      max-height: calc(100vh - 24px);
+      background: #F5F0E8;
+      border-radius: 48px;
+      border: 10px solid #050505;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.55), inset 0 0 0 2px #00000040;
+      overflow: hidden;
+      position: relative;
+      display: flex; flex-direction: column;
+    }
+    .mc-phone::before {
+      content: '';
+      position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+      width: 110px; height: 28px; background: #050505;
+      border-radius: 16px; z-index: 30;
+    }
+    .mc-status {
+      height: 44px; flex: none; padding: 14px 28px 0;
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+      position: relative; z-index: 10;
+    }
+    .mc-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+    .mc-content > .mc-step { position: absolute; inset: 0; display: flex; flex-direction: column; }
+
+    @keyframes mc-wobble { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+    .mc-wobble { animation: mc-wobble 2.6s ease-in-out infinite; }
+    @keyframes mc-pop {
+      0% { transform: scale(1) rotate(0); }
+      35% { transform: scale(1.14) translateY(-6px) rotate(-4deg); }
+      65% { transform: scale(0.92) translateY(4px) rotate(6deg); }
+      100% { transform: scale(0) translateY(-30px) rotate(20deg); opacity: 0; }
+    }
+    .mc-pop { animation: mc-pop 850ms cubic-bezier(.34,1.56,.64,1) forwards; }
+    @keyframes mc-card-in {
+      0% { transform: rotate(-1.8deg) translateY(40px) scale(0.85); opacity: 0; }
+      60% { transform: rotate(0deg) translateY(-6px) scale(1.04); opacity: 1; }
+      100% { transform: rotate(-1.8deg) translateY(0) scale(1); opacity: 1; }
+    }
+    .mc-card-in { animation: mc-card-in 720ms cubic-bezier(.34,1.56,.64,1) backwards; }
+    @keyframes mc-stagger-in {
+      0% { transform: translateY(36px) scale(0.9); opacity: 0; }
+      70% { transform: translateY(-3px) scale(1.02); opacity: 1; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .mc-stagger-in { animation: mc-stagger-in 580ms cubic-bezier(.34,1.56,.64,1) backwards; }
+    @keyframes mc-fall {
+      0%   { transform: translateY(-20px) translateX(0) rotate(0); opacity: 1; }
+      100% { transform: translateY(110vh) translateX(var(--mc-drift, 0)) rotate(var(--mc-rot, 360deg)); opacity: 0.7; }
+    }
+    @keyframes mc-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.4); } }
+    @keyframes mc-vapor {
+      0%   { transform: translate(0, 0) scale(0.9); opacity: 0; }
+      25%  { opacity: 0.9; }
+      100% { transform: translate(20px, -60px) scale(1.15); opacity: 0; }
+    }
+    @keyframes mc-drop {
+      0%   { transform: translateX(var(--tx, 0)) translateY(-30px) rotate(-15deg); opacity: 0; }
+      30%  { opacity: 1; }
+      70%  { transform: translateX(var(--tx, 0)) translateY(70px) rotate(8deg); opacity: 1; }
+      100% { transform: translateX(var(--tx, 0)) translateY(76px) rotate(0); opacity: 0.95; }
+    }
+    @keyframes mc-wrap { 0% { transform: scaleY(0); transform-origin: top; opacity: 0; } 100% { transform: scaleY(1); transform-origin: top; opacity: 0.95; } }
+    @keyframes mc-stamp {
+      0%   { transform: translate(-50%,-30px) rotate(-7deg) scale(2); opacity: 0; }
+      50%  { transform: translate(-50%,2px) rotate(-7deg) scale(1.15); opacity: 1; }
+      100% { transform: translate(-50%,0) rotate(-7deg) scale(1); opacity: 1; }
+    }
+    @keyframes mc-hand { 0% { transform: translate(-50%, -30px); opacity: 0; } 50% { transform: translate(-50%, 0); opacity: 1; } 100% { transform: translate(-50%, -10px); opacity: 0.85; } }
+    @keyframes mc-step-in { 0% { transform: translateX(40px); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
+    .mc-step-in { animation: mc-step-in 380ms cubic-bezier(.34,1.56,.64,1); }
+    @keyframes mc-step-back { 0% { transform: translateX(-40px); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
+    .mc-step-back { animation: mc-step-back 380ms cubic-bezier(.34,1.56,.64,1); }
+    .mc-btn-press { transition: transform 140ms cubic-bezier(.34,1.56,.64,1), box-shadow 140ms; }
+    .mc-btn-press:active { transform: translate(2px, 2px); box-shadow: 0 0 0 #14110E !important; }
+
+    @media (max-width: 480px) {
+      .mc-page { background: #F5F0E8; }
+      .mc-phone { width: 100vw; height: 100vh; max-height: 100vh; border: none; border-radius: 0; }
+      .mc-phone::before { display: none; }
+      .mc-status { display: none; }
+    }
+
+    input, select, button { font: inherit; }
+    input:focus, select:focus {
+      box-shadow: 2px 2px 0 #14110E, 0 0 0 3px var(--mc-focus, #D9442C44) !important;
+      border-color: #14110E !important;
+    }
+
+    .mc-file-warning {
+      position: fixed; inset: 12px;
+      background: rgba(0,0,0,0.78);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      z-index: 9999;
+      display: none;
+    }
+    .mc-file-warning code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background: rgba(255,255,255,0.12);
+      padding: 2px 6px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <div id="file-warning" class="mc-file-warning" role="alert" aria-live="polite">
+    <div style="font-weight: 800; letter-spacing: 0.02em; margin-bottom: 6px;">This demo needs to be served (not opened as a file)</div>
+    <div style="opacity: 0.9; line-height: 1.45;">
+      Browsers block loading the local <code>.jsx</code> files when you open this via <code>file://</code>.
+      Run a tiny local server in this folder, then open <code>http://localhost:5173/</code>.
+      <div style="margin-top: 10px;">
+        In Terminal:
+        <div style="margin-top: 6px;"><code>cd "/Users/oscarbourke/Downloads/Butcher Box Flow (1)"</code></div>
+        <div style="margin-top: 6px;"><code>python3 -m http.server 5173</code></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+  <script>
+    if (window.location && window.location.protocol === 'file:') {
+      const el = document.getElementById('file-warning');
+      if (el) el.style.display = 'block';
+    }
+  </script>
+
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="svg.jsx"></script>
+  <script type="text/babel" src="flow.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect } = React;
+
+const VOICES = {
+  mate: {
+    label: 'Mate',
+    s1sub: "A box of properly good meat. On ice, on its way.",
+    s2note: "Hey — picked you up a Meat Lover box. Their ribeye is genuinely the best I've cooked at home, and the bacon ruined supermarket bacon for me. Tuck in. — Marcus",
+    s3sub: "A few quick questions so we send the cuts you'll actually cook.",
+    s4sub: "Six cuts. Sourced from people we know by name. Tap any card.",
+    s4badge: "No antibiotics. No added hormones. Ever.",
+    s5sub: "First box ships free, frozen overnight. We'll keep you posted.",
+    s6title: "Your Meat Lover Box is on its way",
+  },
+  chef: {
+    label: 'Chef',
+    s1sub: "A curated selection of pasture-raised cuts — chosen with care.",
+    s2note: "I've been cooking from ButcherBox for two years. The dry-aged ribeye and Berkshire bacon are not optional in my kitchen any more. Welcome in. — Marcus",
+    s3sub: "A handful of preferences and we'll tailor your box to the way you cook.",
+    s4sub: "Six benchmark cuts. Each one sourced, named, and traceable.",
+    s4badge: "No antibiotics. No added hormones. Ever.",
+    s5sub: "First delivery is on the house. Ships frozen, overnight, in dry ice.",
+    s6title: "Your box is on its way",
+  },
+};
+
+function App() {
+  const [T, setTweak] = window.useTweaks(/*EDITMODE-BEGIN*/{
+    "voice": "mate",
+    "primaryColor": "#D9442C",
+    "accentColor": "#1F5C5C",
+    "showProgress": true,
+    "recipientName": "Alex",
+    "gifterName": "Marcus"
+  }/*EDITMODE-END*/);
+
+  const [step, setStep] = useState(0);
+  const [dir, setDir] = useState(1);
+
+  const [prefs, setPrefs] = useState({
+    size: '2', conf: 'week', avoid: ['none'], freezer: 'medium',
+  });
+  const [addr, setAddr] = useState({
+    name: 'Alex Morgan', line1: '14 Pine Street', line2: '',
+    city: 'Brooklyn', state: 'NY', zip: '11201', phone: '(555) 010-2034',
+  });
+
+  // sync recipient name into address
+  useEffect(() => {
+    setAddr(a => ({ ...a, name: T.recipientName + ' Morgan' }));
+  }, [T.recipientName]);
+
+  const voice = VOICES[T.voice] || VOICES.mate;
+
+  const next = () => { setDir(1); setStep(s => Math.min(5, s + 1)); };
+  const prev = () => { setDir(-1); setStep(s => Math.max(0, s - 1)); };
+  const restart = () => { setDir(-1); setStep(0); };
+
+  const stepProps = {
+    onNext: next, voice, prefs, setPrefs, addr, setAddr,
+    gifterName: T.gifterName, ctaColor: T.primaryColor,
+  };
+  const steps = [
+    <Step1 key="s1" {...stepProps} />,
+    <Step2 key="s2" {...stepProps} />,
+    <Step3 key="s3" {...stepProps} />,
+    <Step4 key="s4" {...stepProps} />,
+    <Step5 key="s5" {...stepProps} />,
+    <Step6 key="s6" {...stepProps} onRestart={restart} />,
+  ];
+
+  const stepLabels = ['Reveal','Note','Kitchen','Menu','Shipping','Confirmed'];
+  const time = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }).replace(/\s/g, '');
+
+  // top bar / status bar bg per step
+  const isHero = step === 0 || step === 5;
+  const barBg = isHero ? T.accentColor : '#F5F0E8';
+  const barFg = isHero ? '#F5F0E8' : '#14110E';
+
+  return (
+    <div className="mc-page" style={{ '--mc-focus': T.primaryColor + '44' }}>
+      <div className="mc-phone" data-screen-label={`0${step+1} ${stepLabels[step]}`}>
+        <div className="mc-status" style={{ background: barBg, color: barFg }}>
+          <span>{time}</span>
+          <span style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 12 }}>
+            <span>5G</span>
+            <span style={{ display: 'inline-block', width: 22, height: 11, border: `1.5px solid ${barFg}`, borderRadius: 3, position: 'relative' }}>
+              <span style={{ position: 'absolute', inset: 1, background: barFg, borderRadius: 1.5, width: '85%' }}></span>
+            </span>
+          </span>
+        </div>
+
+        <div style={{ flex: 'none', padding: '4px 22px 0', background: barBg, color: barFg, position: 'relative', zIndex: 5 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0' }}>
+            <div onClick={step > 0 && step < 5 ? prev : undefined}
+                 style={{ cursor: step > 0 && step < 5 ? 'pointer' : 'default', width: 44, fontSize: 22, color: barFg, opacity: step > 0 && step < 5 ? 1 : 0 }}>←</div>
+            <Wordmark size={18} color={barFg} />
+            <div style={{ width: 44, textAlign: 'right', fontFamily: 'Archivo Narrow, sans-serif', fontWeight: 800, fontSize: 11, letterSpacing: '0.08em', color: barFg, opacity: 0.7 }}>{step+1}/6</div>
+          </div>
+          {T.showProgress && <ProgressPips step={step} color={isHero ? '#F5F0E8' : T.primaryColor} />}
+        </div>
+
+        <div className="mc-content">
+          {steps.map((s, i) => i === step ? (
+            <div key={i} className={`mc-step ${dir > 0 ? 'mc-step-in' : 'mc-step-back'}`}>{s}</div>
+          ) : null)}
+        </div>
+      </div>
+
+      {window.TweaksPanel && (
+        <window.TweaksPanel title="Tweaks">
+          <window.TweakSection label="Voice & names">
+            <window.TweakRadio label="Voice"
+              value={T.voice}
+              options={[{value:'mate',label:'Mate'},{value:'chef',label:'Chef'}]}
+              onChange={v => setTweak('voice', v)} />
+            <window.TweakText label="Recipient first name" value={T.recipientName} onChange={v => setTweak('recipientName', v)} />
+            <window.TweakText label="Gifter first name" value={T.gifterName} onChange={v => setTweak('gifterName', v)} />
+          </window.TweakSection>
+          <window.TweakSection label="Brand colors">
+            <window.TweakColor label="Primary CTA" value={T.primaryColor} onChange={v => setTweak('primaryColor', v)} />
+            <window.TweakColor label="Hero accent" value={T.accentColor} onChange={v => setTweak('accentColor', v)} />
+          </window.TweakSection>
+          <window.TweakSection label="Demo">
+            <window.TweakToggle label="Show progress bar" value={T.showProgress} onChange={v => setTweak('showProgress', v)} />
+            <window.TweakSelect label="Jump to step"
+              value={String(step)}
+              options={[
+                {value:'0',label:'1 — Reveal'},
+                {value:'1',label:'2 — Note'},
+                {value:'2',label:'3 — Kitchen'},
+                {value:'3',label:'4 — Menu'},
+                {value:'4',label:'5 — Shipping'},
+                {value:'5',label:'6 — Confirmed'},
+              ]}
+              onChange={v => { setDir(parseInt(v) > step ? 1 : -1); setStep(parseInt(v)); }} />
+            <window.TweakButton label="Restart demo" onClick={restart} />
+          </window.TweakSection>
+        </window.TweaksPanel>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>ButcherBox — gift unboxing demo</title>
+    <style>
+      html, body { height: 100%; }
+      body { margin: 0; background: #0d2727; }
+      .frame {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <p style="color:#fff; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 24px;">
+        This demo needs JavaScript enabled.
+      </p>
+    </noscript>
+
+    <script>
+      // Some setups struggle with spaces in file names and/or iframes on file://.
+      // Use a direct navigation first, and only fall back to an iframe.
+      (() => {
+        const target = './Marrow%20Co%20Gift%20Demo.html';
+
+        try {
+          const url = new URL(target, window.location.href);
+          window.location.replace(url.href);
+          return;
+        } catch (_) {
+          // ignore, fall back to iframe
+        }
+
+        const iframe = document.createElement('iframe');
+        iframe.className = 'frame';
+        iframe.title = 'ButcherBox gift unboxing demo';
+        iframe.src = target;
+        document.body.appendChild(iframe);
+      })();
+    </script>
+  </body>
+</html>
